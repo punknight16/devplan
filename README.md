@@ -1,3 +1,3 @@
 #DEVPLAN
 
-A draggable UI for administering a website
+A draggable UI for web admins

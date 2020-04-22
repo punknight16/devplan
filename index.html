@@ -42,19 +42,20 @@
 </head>
 <body>
 	<main id="main">
-	<!-- Draggable DIV -->
-		<div id="mydiv" class="card control-widget">
-		  <!-- Include a header DIV with the same name as the draggable DIV, followed by "header" -->
-		  <div id="mydivheader" class="header">Click here to move</div>
-		  <button onclick="addDiv()">Click Me</button>
-		</div>
+	
+		
 	</main>
+  
   <script>
    
-    function addDiv(){
+    function addDiv(div_id, pos1, pos2){
+      div_id = (div_id) ? div_id :  Math.random().toString(36).substring(2, 15);
+      pos1 = (pos1 !=undefined) ? pos1 : Math.floor(Math.random() * window.innerHeight*.8)+'px';
+      pos2 = (pos2 !=undefined) ? pos2 : Math.floor(Math.random() * window.innerWidth*.8)+'px';
       var node = document.createElement("div");
-      node.style.top = Math.floor(Math.random() * window.innerHeight*.8)+'px';
-      node.style.left = Math.floor(Math.random() * window.innerWidth*.8)+'px';
+      node.setAttribute("id", div_id);
+      node.style.top = pos1;
+      node.style.left = pos2;
       
       node.classList.add("card");
       node.classList.add("control-widget");
@@ -64,17 +65,25 @@
       header.classList.add("header");
       node.appendChild(header);      
       var button = document.createElement("button");
-      var buttontext = document.createTextNode("New Button");         
+      var buttontext = document.createTextNode("Create Page");         
       button.appendChild(buttontext);
-      button.onclick = addDiv;
+      button.onclick = generateDiv;
       node.appendChild(button);                              
       document.getElementById("main").appendChild(node);
       dragElement(node);
     }
+
+    function generateDiv(e, div_id, pos1, pos2){
+      div_id = (div_id) ? div_id :  Math.random().toString(36).substring(2, 15);
+      pos1 = (pos1 !=undefined) ? pos1 : Math.floor(Math.random() * window.innerHeight*.8)+'px';
+      pos2 = (pos2 !=undefined) ? pos2 : Math.floor(Math.random() * window.innerWidth*.8)+'px';
+      AppContext.cards.push({div_id: div_id, pos1: pos1, pos2: pos2});
+      addDiv(div_id, pos1, pos2);
+    }
   </script>
 	<script>
 		// Make the DIV element draggable:
-dragElement(document.getElementById("mydiv"));
+
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -112,11 +121,30 @@ function dragElement(elmnt) {
 
   function closeDragElement() {
     // stop moving when mouse button is released:
+    console.log("close drag element fired: ", elmnt);
+    var found_index = AppContext.cards.findIndex((obj)=>{
+      return (obj.div_id == elmnt.id)
+    });
+    if(found_index != -1){
+      console.log('found index');
+      AppContext.cards[found_index].pos2 = elmnt.style.top;
+      AppContext.cards[found_index].pos1 = elmnt.style.left;
+    }
     document.onmouseup = null;
     document.onmousemove = null;
   }
 }
 
 	</script>
+  <script>
+    var AppContext = {};
+    AppContext.cards = [];
+    AppContext.cards.push({
+      div_id: "testdiv", pos1: 0, pos2: 0
+    })
+    AppContext.cards.map((obj, index)=>{
+      addDiv(obj.div_id, obj.pos1, obj.pos2);
+    });
+  </script>
 </body>
 </html>

@@ -2,34 +2,76 @@
 <html>
 <head>
 	<style>
-		#mydiv {
+		.control-widget {
 		  position: absolute;
 		  z-index: 9;
 		  background-color: #f1f1f1;
-		  border: 1px solid #d3d3d3;
+		  /*border: 1px solid #d3d3d3;*/
 		  text-align: center;
+      padding: 0px 0px 10px 0px;
 		}
-
-		#mydivheader {
+    .card {
+      width: 200px;
+      height: 100px;
+    }
+		.header {
 		  padding: 10px;
 		  cursor: move;
 		  z-index: 10;
 		  background-color: #2196F3;
 		  color: #fff;
+      text-align: center;
 		}
+    button {
+      margin-top: 10px;
+      background-color: green;
+      padding: 10px 20px 10px 20px;
+      color: white;
+      font-size: 18px;
+      box-shadow: 1px 1px 2px gray;
+      border: none;
+      cursor: pointer;
+    }
+    button:active {
+      background-color: darkgreen;
+    }
+    button: hover {
+      opacity: 80%;
+    }
 	</style>
 </head>
 <body>
-	<main>
+	<main id="main">
 	<!-- Draggable DIV -->
-		<div id="mydiv">
+		<div id="mydiv" class="card control-widget">
 		  <!-- Include a header DIV with the same name as the draggable DIV, followed by "header" -->
-		  <div id="mydivheader">Click here to move</div>
-		  <p contenteditable>Move</p>
-		  <p contenteditable>this</p>
-		  <p contenteditable>DIV</p>
+		  <div id="mydivheader" class="header">Click here to move</div>
+		  <button onclick="addDiv()">Click Me</button>
 		</div>
 	</main>
+  <script>
+   
+    function addDiv(){
+      var node = document.createElement("div");
+      node.style.top = Math.floor(Math.random() * window.innerHeight*.8)+'px';
+      node.style.left = Math.floor(Math.random() * window.innerWidth*.8)+'px';
+      
+      node.classList.add("card");
+      node.classList.add("control-widget");
+      var header = document.createElement("div");
+      var headertext = document.createTextNode("Click here to move");
+      header.appendChild(headertext);
+      header.classList.add("header");
+      node.appendChild(header);      
+      var button = document.createElement("button");
+      var buttontext = document.createTextNode("New Button");         
+      button.appendChild(buttontext);
+      button.onclick = addDiv;
+      node.appendChild(button);                              
+      document.getElementById("main").appendChild(node);
+      dragElement(node);
+    }
+  </script>
 	<script>
 		// Make the DIV element draggable:
 dragElement(document.getElementById("mydiv"));
